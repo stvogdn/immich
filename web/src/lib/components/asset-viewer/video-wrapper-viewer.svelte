@@ -5,6 +5,7 @@
   import type { AssetResponseDto } from '@immich/sdk';
 
   interface Props {
+    transitionName?: string;
     asset: AssetResponseDto;
     assetId?: string;
     projectionType: string | null | undefined;
@@ -16,9 +17,11 @@
     onNextAsset?: () => void;
     onVideoEnded?: () => void;
     onVideoStarted?: () => void;
+    onReady?: () => void;
   }
 
   let {
+    transitionName,
     asset,
     assetId,
     projectionType,
@@ -30,15 +33,17 @@
     onNextAsset,
     onVideoEnded,
     onVideoStarted,
+    onReady,
   }: Props = $props();
 
   const effectiveAssetId = $derived(assetId ?? asset.id);
 </script>
 
 {#if projectionType === ProjectionType.EQUIRECTANGULAR}
-  <VideoPanoramaViewer {asset} />
+  <VideoPanoramaViewer {transitionName} {asset} {onReady} />
 {:else}
   <VideoNativeViewer
+    {transitionName}
     {loopVideo}
     {cacheKey}
     assetId={effectiveAssetId}
@@ -48,5 +53,6 @@
     {onVideoEnded}
     {onVideoStarted}
     {onClose}
+    {onReady}
   />
 {/if}

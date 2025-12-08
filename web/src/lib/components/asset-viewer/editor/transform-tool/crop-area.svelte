@@ -10,9 +10,10 @@
 
   interface Props {
     asset: AssetResponseDto;
+    onReady?: () => void;
   }
 
-  let { asset }: Props = $props();
+  let { asset, onReady }: Props = $props();
 
   // viewBox 0 0 24 24 is assumed. Without rotation this icon is top-left.
   const cornerIcon = 'M 12 24 L 12 12 L 24 12';
@@ -74,6 +75,8 @@
       alt={$getAltText(toTimelineAsset(asset))}
       class="h-full select-none transition-transform motion-reduce:transition-none"
       style:transform={imageTransform}
+      onload={() => onReady?.()}
+      onerror={() => onReady?.()}
     />
     <div
       class={[

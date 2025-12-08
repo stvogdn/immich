@@ -18,6 +18,7 @@
   import { fade } from 'svelte/transition';
 
   interface Props {
+    transitionName?: string;
     assetId: string;
     loopVideo: boolean;
     cacheKey: string | null;
@@ -27,9 +28,11 @@
     onVideoEnded?: () => void;
     onVideoStarted?: () => void;
     onClose?: () => void;
+    onReady?: () => void;
   }
 
   let {
+    transitionName,
     assetId,
     loopVideo,
     cacheKey,
@@ -39,6 +42,7 @@
     onVideoEnded = () => {},
     onVideoStarted = () => {},
     onClose = () => {},
+    onReady,
   }: Props = $props();
 
   let videoPlayer: HTMLVideoElement | undefined = $state();
@@ -70,6 +74,11 @@
       videoPlayer.src = '';
     }
   });
+
+  const handleLoadedMetadata = () => {
+    onReady?.();
+  };
+
 
   const handleCanPlay = async (video: HTMLVideoElement) => {
     try {
@@ -139,6 +148,7 @@
       </div>
     {:else}
       <video
+        style:view-transition-name={transitionName}
         bind:this={videoPlayer}
         loop={$loopVideoPreference && loopVideo}
         autoplay={$autoPlayVideo}
@@ -147,6 +157,7 @@
         disablePictureInPicture
         class="h-full object-contain"
         {...useSwipe(onSwipe)}
+        onloadedmetadata={() => handleLoadedMetadata()}
         oncanplay={(e) => handleCanPlay(e.currentTarget)}
         onended={onVideoEnded}
         onvolumechange={(e) => ($videoViewerMuted = e.currentTarget.muted)}

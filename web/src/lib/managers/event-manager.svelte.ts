@@ -21,6 +21,8 @@ import type {
 export type Events = {
   AppInit: [];
 
+  AssetViewerAfterNavigate: [];
+
   AuthLogin: [LoginResponseDto];
   AuthLogout: [];
   AuthUserLoaded: [UserAdminResponseDto];
@@ -75,6 +77,19 @@ export type Events = {
   UserAdminDeleted: [{ id: string }];
 
   SessionLocked: [];
+
+  TransitionToTimeline: [{ id: string }];
+  TimelineLoaded: [{ id: string | null }];
+
+  TransitionToAssetViewer: [];
+  AssetViewerLoaded: [];
+  AssetViewerFree: [];
+
+  BeforeStartViewTransition: [];
+  Finished: [];
+  Ready: [];
+  UpdateCallbackDone: [];
+  StartViewTransition: [];
 
   SystemConfigUpdate: [SystemConfigDto];
 

@@ -26,6 +26,7 @@
     slideshowState?: SlideshowState;
     slideshowLook?: SlideshowLook;
     transitionName?: string | null | undefined;
+    imageClass?: string;
     onUrlChange?: (url: string) => void;
     onImageReady?: () => void;
     onError?: () => void;
@@ -46,6 +47,7 @@
     slideshowState = SlideshowState.None,
     slideshowLook = SlideshowLook.Contain,
     transitionName,
+    imageClass,
     onUrlChange,
     onImageReady,
     onError,
@@ -176,7 +178,7 @@
   />
 
   <div
-    class="absolute inset-0 pointer-events-none"
+    class={['absolute inset-0 pointer-events-none', imageClass]}
     style:left
     style:top
     style:width

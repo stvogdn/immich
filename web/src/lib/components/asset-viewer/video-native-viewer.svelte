@@ -79,7 +79,6 @@
     onReady?.();
   };
 
-
   const handleCanPlay = async (video: HTMLVideoElement) => {
     try {
       if (!video.paused && !isScrubbing) {

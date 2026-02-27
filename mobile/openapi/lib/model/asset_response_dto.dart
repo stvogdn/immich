@@ -62,7 +62,6 @@ class AssetResponseDto {
   /// Device ID
   String deviceId;
 
-  /// Duplicate group ID
   String? duplicateId;
 
   /// Video duration (for videos)
@@ -85,7 +84,7 @@ class AssetResponseDto {
   /// Whether asset has metadata
   bool hasMetadata;
 
-  /// Asset height
+  /// Minimum value: 0
   num? height;
 
   /// Asset ID
@@ -106,10 +105,8 @@ class AssetResponseDto {
   /// Is trashed
   bool isTrashed;
 
-  /// Library ID
   String? libraryId;
 
-  /// Live photo video ID
   String? livePhotoVideoId;
 
   /// The local date and time when the photo/video was taken, derived from EXIF metadata. This represents the photographer's local time regardless of timezone, stored as a timezone-agnostic timestamp. Used for timeline grouping by \"local\" days and months.
@@ -152,6 +149,12 @@ class AssetResponseDto {
   ///
   bool? resized;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   AssetStackResponseDto? stack;
 
   List<TagResponseDto> tags;
@@ -159,7 +162,6 @@ class AssetResponseDto {
   /// Thumbhash for thumbnail generation (base64) also used as the c query param for thumbnail cache busting.
   String? thumbhash;
 
-  /// Asset type
   AssetTypeEnum type;
 
   List<AssetFaceWithoutPersonResponseDto> unassignedFaces;
@@ -167,10 +169,9 @@ class AssetResponseDto {
   /// The UTC timestamp when the asset record was last updated in the database. This is automatically maintained by the database and reflects when any field in the asset was last modified.
   DateTime updatedAt;
 
-  /// Asset visibility
   AssetVisibility visibility;
 
-  /// Asset width
+  /// Minimum value: 0
   num? width;
 
   @override

@@ -20,10 +20,8 @@ class PersonCreateDto {
     this.name,
   });
 
-  /// Person date of birth
   DateTime? birthDate;
 
-  /// Person color (hex)
   String? color;
 
   /// Mark as favorite

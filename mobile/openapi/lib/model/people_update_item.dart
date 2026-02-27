@@ -22,10 +22,8 @@ class PeopleUpdateItem {
     this.name,
   });
 
-  /// Person date of birth
   DateTime? birthDate;
 
-  /// Person color (hex)
   String? color;
 
   /// Asset ID used for feature face thumbnail

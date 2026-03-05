@@ -178,14 +178,14 @@ class WorkflowsApi {
     return null;
   }
 
-  /// List all workflows
+  /// List all workflow triggers
   ///
-  /// Retrieve a list of workflows available to the authenticated user.
+  /// Retrieve a list of all available workflow triggers.
   ///
   /// Note: This method returns the HTTP [Response].
-  Future<Response> getWorkflowsWithHttpInfo() async {
+  Future<Response> getWorkflowTriggersWithHttpInfo() async {
     // ignore: prefer_const_declarations
-    final apiPath = r'/workflows';
+    final apiPath = r'/workflows/triggers';
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -208,11 +208,112 @@ class WorkflowsApi {
     );
   }
 
+  /// List all workflow triggers
+  ///
+  /// Retrieve a list of all available workflow triggers.
+  Future<List<WorkflowTriggerResponseDto>?> getWorkflowTriggers() async {
+    final response = await getWorkflowTriggersWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(responseBody, 'List<WorkflowTriggerResponseDto>') as List)
+        .cast<WorkflowTriggerResponseDto>()
+        .toList(growable: false);
+
+    }
+    return null;
+  }
+
   /// List all workflows
   ///
   /// Retrieve a list of workflows available to the authenticated user.
-  Future<List<WorkflowResponseDto>?> getWorkflows() async {
-    final response = await getWorkflowsWithHttpInfo();
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] description:
+  ///   Workflow description
+  ///
+  /// * [bool] enabled:
+  ///   Workflow enabled
+  ///
+  /// * [String] id:
+  ///   Workflow ID
+  ///
+  /// * [String] name:
+  ///   Workflow name
+  ///
+  /// * [WorkflowTrigger] trigger:
+  ///   Workflow trigger type
+  Future<Response> searchWorkflowsWithHttpInfo({ String? description, bool? enabled, String? id, String? name, WorkflowTrigger? trigger, }) async {
+    // ignore: prefer_const_declarations
+    final apiPath = r'/workflows';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (description != null) {
+      queryParams.addAll(_queryParams('', 'description', description));
+    }
+    if (enabled != null) {
+      queryParams.addAll(_queryParams('', 'enabled', enabled));
+    }
+    if (id != null) {
+      queryParams.addAll(_queryParams('', 'id', id));
+    }
+    if (name != null) {
+      queryParams.addAll(_queryParams('', 'name', name));
+    }
+    if (trigger != null) {
+      queryParams.addAll(_queryParams('', 'trigger', trigger));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      apiPath,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// List all workflows
+  ///
+  /// Retrieve a list of workflows available to the authenticated user.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] description:
+  ///   Workflow description
+  ///
+  /// * [bool] enabled:
+  ///   Workflow enabled
+  ///
+  /// * [String] id:
+  ///   Workflow ID
+  ///
+  /// * [String] name:
+  ///   Workflow name
+  ///
+  /// * [WorkflowTrigger] trigger:
+  ///   Workflow trigger type
+  Future<List<WorkflowResponseDto>?> searchWorkflows({ String? description, bool? enabled, String? id, String? name, WorkflowTrigger? trigger, }) async {
+    final response = await searchWorkflowsWithHttpInfo( description: description, enabled: enabled, id: id, name: name, trigger: trigger, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

@@ -48,3 +48,26 @@ export type AssetControlContext = {
   getOwnedAssets: () => TimelineAsset[]; // Only assets owned by the user
   clearSelect: () => void;
 };
+
+export type JSONSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'object';
+
+export type JSONSchemaProperty = {
+  type: JSONSchemaType;
+  title?: string;
+  description?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default?: any;
+  enum?: string[];
+  array?: boolean;
+  properties?: Record<string, JSONSchemaProperty>;
+  required?: string[];
+  uiHint?: 'albumId' | 'assetId' | 'personId';
+};
+
+export interface JSONSchema {
+  type: 'object';
+  properties?: Record<string, JSONSchemaProperty>;
+  required?: string[];
+  additionalProperties?: boolean;
+  description?: string;
+}

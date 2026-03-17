@@ -16,7 +16,7 @@ import {
   SearchSuggestionRequestDto,
   SearchSuggestionType,
   SmartSearchDto,
-  StatisticsSearchDto,
+  StatisticsSearchDto
 } from 'src/dtos/search.dto';
 import { AssetOrder, AssetVisibility, Permission } from 'src/enum';
 import { BaseService } from 'src/services/base.service';
@@ -102,7 +102,7 @@ export class SearchService extends BaseService {
     return items.map((item) => mapAsset(item, { auth }));
   }
 
-  async searchSmart(auth: AuthDto, dto: SmartSearchDto): Promise<SearchResponseDto> {
+  async searchSmart(auth: AuthDto, dto: SmartSearchDto): Promise<SmartSearchResponseDto> {
     if (dto.visibility === AssetVisibility.Locked) {
       requireElevatedPermission(auth);
     }
@@ -142,7 +142,7 @@ export class SearchService extends BaseService {
       { ...dto, userIds: await userIds, embedding },
     );
 
-    return this.mapResponse(items, hasNextPage ? (page + 1).toString() : null, { auth });
+    return this.mapSmartSearchResponse(items, hasNextPage ? (page + 1).toString() : null, { auth });
   }
 
   async getAssetsByCity(auth: AuthDto): Promise<AssetResponseDto[]> {
@@ -202,6 +202,33 @@ export class SearchService extends BaseService {
         total: assets.length,
         count: assets.length,
         items: assets.map((asset) => mapAsset(asset, options)),
+        facets: [],
+        nextPage,
+      },
+    };
+  }
+
+  private mapSmartSearchResponse(
+    assets: (MapAsset & { distance: number })[],
+    nextPage: string | null,
+    options: AssetMapOptions,
+  ): SmartSearchResponseDto {
+    return {
+      albums: { total: 0, count: 0, items: [], facets: [] },
+      assets: {
+        total: assets.length,
+        count: assets.length,
+        items: assets.map((asset): SmartSearchAssetResponseDto => {
+          // Convert cosine distance (0-2) to confidence score (0-1)
+          // Distance 0 = identical vectors = confidence 1.0
+          // Distance 2 = opposite vectors = confidence 0.0
+          const confidence = Math.max(0, Math.min(1, 1 - asset.distance / 2));
+          
+          return {
+            ...mapAsset(asset, options),
+            confidence,
+          };
+        }),
         facets: [],
         nextPage,
       },

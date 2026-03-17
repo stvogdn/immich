@@ -390,6 +390,41 @@ export class SearchStatisticsResponseDto {
   total!: number;
 }
 
+// Smart search specific DTOs with confidence values
+export class SmartSearchAssetResponseDto extends AssetResponseDto {
+  @ApiProperty({ 
+    type: 'number', 
+    minimum: 0, 
+    maximum: 1,
+    description: 'Search confidence score between 0 and 1, where 1 indicates highest relevance' 
+  })
+  confidence!: number;
+}
+
+class SmartSearchAssetCollectionDto {
+  @ApiProperty({ type: 'integer', description: 'Total number of matching assets' })
+  total!: number;
+  @ApiProperty({ type: 'integer', description: 'Number of assets in this page' })
+  count!: number;
+  // Description lives on schema to avoid duplication
+  @ApiProperty({ type: [SmartSearchAssetResponseDto], description: undefined })
+  items!: SmartSearchAssetResponseDto[];
+  // Description lives on schema to avoid duplication
+  @ApiProperty({ description: undefined })
+  facets!: SearchFacetResponseDto[];
+  @ApiProperty({ description: 'Next page token' })
+  nextPage!: string | null;
+}
+
+export class SmartSearchResponseDto {
+  // Description lives on schema to avoid duplication
+  @ApiProperty({ description: undefined })
+  albums!: SearchAlbumResponseDto;
+  // Description lives on schema to avoid duplication
+  @ApiProperty({ type: SmartSearchAssetCollectionDto, description: undefined })
+  assets!: SmartSearchAssetCollectionDto;
+}
+
 class SearchExploreItem {
   @ApiProperty({ description: 'Explore value' })
   value!: string;

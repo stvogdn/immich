@@ -5,18 +5,18 @@ import { AssetResponseDto } from 'src/dtos/asset-response.dto';
 import { AuthDto } from 'src/dtos/auth.dto';
 import { PersonResponseDto } from 'src/dtos/person.dto';
 import {
-  LargeAssetSearchDto,
-  MetadataSearchDto,
-  PlacesResponseDto,
-  RandomSearchDto,
-  SearchExploreResponseDto,
-  SearchPeopleDto,
-  SearchPlacesDto,
-  SearchResponseDto,
-  SearchStatisticsResponseDto,
-  SearchSuggestionRequestDto,
-  SmartSearchDto,
-  StatisticsSearchDto,
+    LargeAssetSearchDto,
+    MetadataSearchDto,
+    PlacesResponseDto,
+    RandomSearchDto,
+    SearchExploreResponseDto,
+    SearchPeopleDto,
+    SearchPlacesDto,
+    SearchResponseDto,
+    SearchStatisticsResponseDto,
+    SearchSuggestionRequestDto,
+    SmartSearchDto,
+    StatisticsSearchDto
 } from 'src/dtos/search.dto';
 import { ApiTag, Permission } from 'src/enum';
 import { Auth, Authenticated } from 'src/middleware/auth.guard';
@@ -83,7 +83,7 @@ export class SearchController {
     description: 'Perform a smart search for assets by using machine learning vectors to determine relevance.',
     history: new HistoryBuilder().added('v1').beta('v1').stable('v2'),
   })
-  searchSmart(@Auth() auth: AuthDto, @Body() dto: SmartSearchDto): Promise<SearchResponseDto> {
+  searchSmart(@Auth() auth: AuthDto, @Body() dto: SmartSearchDto): Promise<SmartSearchResponseDto> {
     return this.service.searchSmart(auth, dto);
   }
 
